@@ -1,0 +1,214 @@
+create table studs(
+Sname varchar(39),
+Sid varchar(10),
+Sage number(10),
+Sarea varchar(20),
+Sdept varchar(20),
+Spocket Varchar(20)
+);
+
+--------------------------------------------------
+select sarea,sum(spocket) results from studs
+group by sarea;
+
+select sarea,sum(spocket) results from studs
+group by sarea having sum(spocket) < 265000;
+
+delete from studs where sid = 506;
+
+--------------------------------------------------
+
+create table product(
+prodname varchar(39),
+prodno varchar(10)
+);
+
+create table sale(
+prodname varchar(39),
+orderno number(10),
+prodno varchar(10)
+);
+
+--------------------------------------------------
+
+select prodname from product
+where prodno = 39
+union
+select prodname from sale
+where prodno = 13;
+
+select prodname from product
+where prodno = 39
+intersect
+select prodname from sale
+where prodno = 13;
+
+--------------------------------------------------
+
+create table sstud1(
+sname varchar(39),
+place varchar(20)
+);
+
+create table sstud2(
+sname varchar(39),
+dept varchar(20),
+marks number(10)
+);
+
+--------------------------------------------------
+
+select sstud1.sname , dept 
+from sstud1 inner join sstud2
+on (sstud1.sname=sstud2.sname);
+
+
+select sstud1.sname , dept 
+from sstud1 join sstud2
+on (sstud1.sname=sstud2.sname);
+
+select sstud1.sname , dept 
+from sstud1 left outer join sstud2
+on (sstud1.sname=sstud2.sname);
+
+select sstud1.sname , dept 
+from sstud1 right outer join sstud2
+on (sstud1.sname=sstud2.sname);
+
+
+select sstud1.sname , dept 
+from sstud1 full outer join sstud2
+on (sstud1.sname=sstud2.sname);
+
+select sname from sstud1 where sstud1.sname in
+(select sstud2.sname from sstud2);
+
+select sname from sstud1 where sstud1.sname not in
+(select sstud2.sname from sstud2);
+
+select sname from sstud2
+where marks>some(select marks from sstud2 where dept = 'CSE');
+
+select sname from sstud2 
+where marks>=some(
+	select marks from sstud2
+	where dept = 'CSE'
+);
+
+select sname from sstud2 
+where marks>=any(
+	select marks from sstud2
+	where dept = 'CSE'
+);
+
+select sname from sstud2 
+where marks>all(
+	select marks from sstud2
+	where dept = 'CSE'
+);
+
+select sname from sstud2 
+where marks<all(
+	select marks from sstud2
+	where dept = 'CSE'
+);
+
+select sname from sstud1 
+where exists(
+	select sstud2.sname from sstud2
+	where sstud1.sname = sstud2.sname
+);
+
+select sname from sstud1 
+where not exists(
+	select sstud2.sname from sstud2
+	where sstud1.sname = sstud2.sname
+);
+
+---------------------------------------------------------
+
+drop table semp;
+drop table depts;
+drop table depts2;
+drop table airports;
+drop table orders;
+drop table empl;
+drop table custo;
+drop table book;
+drop table branches;
+
+
+create table empl(
+ename varchar(39) not null,
+eid varchar(20) not null
+);
+
+insert into empl values('Hatsune' , 39);
+insert into empl values('Megurine' , null);
+
+create table depts(
+dname varchar(39) not null,
+did number(10) not null check ( did < 39000 )
+);
+
+insert into depts values('Sales' , 39);
+insert into depts values('Accounting' , 39001);
+
+create table airports(
+aname varchar(39) not null,
+acity varchar(39) check(acity in ('Chennai' , 'Hyderabad' , 'Bangalore'))
+);
+
+
+insert into Airports values('HatsuAirport' , 'Chennai');
+insert into Airports values('Air' , 'Mars');
+
+create table book(
+bname varchar(39) not null,
+bid number(20) not null unique
+);
+
+insert into book values('Mein Kampf' , 1000);
+insert into book values('The Communist Manifesto' , 1000);
+
+create table orders(
+oname varchar(39) not null,
+oid number(20) not null,
+unique (oname , oid)
+);
+
+insert into orders values('chair' , 2005);
+insert into orders values('chair' , 2005);
+
+create table custo(
+cname varchar(39) not null,
+cid number(20) not null primary key
+);
+
+insert into custo values('Jones', 506);
+insert into custo values('Stock', 506);
+
+create table branches(
+bname varchar(39) not null,
+bid number(20) not null,
+primary key (bname,bid)
+);
+
+insert into custo values('Anna Nagar', 1005);
+insert into custo values('Anna Nagar', 1005);
+
+create table depts2(city varchar(39) , dno number(20) primary key);
+insert into depts2 values('Chennai' , 101);
+insert into depts2 values('Chennai' , 102);
+
+create table semp(ename varchar(39) , dno number(20) references depts2(dno));
+insert into semp values('X' , 101);
+insert into semp values('Y' , 102);
+select * from semp;
+
+alter table semp add(address varchar(39));
+update semp set address='Nowhere' where dno = 101;
+update semp set address='Here' where dno = 102;
+select name,ename from depts2,semp where depts2.dno=semp.dno;
+
+
