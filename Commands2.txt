@@ -1,0 +1,134 @@
+create table fviews
+(
+name varchar(20),
+no number(5),
+sal number(5),
+dno number(5)
+);
+
+insert into fviews values(
+'Hatsune',
+1,
+19000,
+39
+);
+
+insert into fviews values(
+'Megurine',
+2,
+19000,
+39
+);
+
+insert into fviews values(
+'Kagamine',
+3,
+24000,
+40
+);
+
+select * from fviews;
+
+------------------------------------------------
+
+create table dviews
+(
+dno number(5),
+dname varchar(5)
+);
+
+insert into dviews values
+(
+39 , 'cse'
+);
+
+insert into dviews values
+(
+40 , 'ai'
+);
+
+insert into dviews values
+(
+41 , 'wm'
+);
+
+select * from dviews;
+
+------------------------------------------------
+
+create view sview as
+(
+select name , no , sal , dno 
+from fviews
+where dno=39
+);
+
+select * from sview;
+
+------------------------------------------------
+
+insert into sview values( 'Otomachi' , 4 , 20000 , 39 );
+
+select * from sview ;
+select * from fviews ;
+
+------------------------------------------------
+
+create view iview as
+select * from fviews;
+
+insert into iview values
+(
+'Meika' , 5 , 30000 , 40
+);
+
+select * from iview ;
+select * from fviews ;
+
+------------------------------------------------
+
+create view ssview(custname , id) as
+select name ,no from fviews
+where dno = 39 ;
+
+select * from ssview ;
+
+drop view ssview ;
+
+------------------------------------------------
+
+create view combo as
+select name,no,sal,
+dviews.dno,dname from fviews,dviews
+where fviews.dno = dviews.dno ;
+
+select * from combo ;
+
+------------------------------------------------
+
+insert into combo values('Yuzuki' , 6 , 1000 , 41 , 'A');
+
+insert into combo values('Yuzuki' , 6 , 1000 , 41 , 'A');
+
+------------------------------------------------
+
+
+
+
+
+
+
+------------------------------------------------
+
+alter session set "_oracle_script" = true;
+
+grant connect to Hatsune identified by Miku;
+
+grant all on studs to Hatsune;
+
+grant select,update,insert on product
+to Hatsune with grant option ;
+
+revoke all on studs from Hatsune ;
+
+revoke select,update,insert on product from Hatsune ;
